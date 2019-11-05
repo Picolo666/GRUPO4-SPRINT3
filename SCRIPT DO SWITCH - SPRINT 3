@@ -1,0 +1,47 @@
+enable
+configure terminal
+hostname SW-GRP04
+banner motd "ACESSO AUTORIZADO APENAS PARA QUEM É LINDO"
+enable secret SenhadaEnable
+ip domain-name GRUPO-04.local
+crypto key generate rsa general-keys modulus 1024
+username fabioribeiro privilege 15 secret utopia*00
+username victorsousa privilege 15 secret utopia*00
+username rafaelpicollo privilege 15 secret utopia*00
+username marcospaulo privilege 15 secret utopia*00
+line console 0
+password SenhadaConsole
+login
+exit
+service password-encryption
+line vty 0 15
+password SenhadaVTY
+transport input ssh
+exec-timeout 5
+login local
+exit
+vlan 24
+name VLAN-24
+exit
+vlan 124
+name GERENCIAMENTO
+interface  f0/1
+switchport mode access 
+switchport access vlan 24
+Description  PC-GRP04
+exit
+interface  f0/2
+switchport mode access 
+switchport access vlan 24
+Description  PC-GRP04
+exit
+interface  g0/1
+switchport mode trunk 
+switchport  trunk native vlan 99
+switchport trunk allowed vlan 24,99,124
+Description  SW-CORE
+exit 
+interface vlan 124
+ip address 192.168.251.253 255.255.255.0
+ip default-gateway 192.168.251.1
+do wr
