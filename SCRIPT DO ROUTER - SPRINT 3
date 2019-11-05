@@ -1,0 +1,44 @@
+enable
+conf t
+hostname RT-01
+banner motd "ACESSO AUTORIZADO APENAS PARA QUEM É LINDO"
+enable secret SenhadaEnable
+ip domain-name GRUPO-04.local
+crypto key generate rsa general-keys modulus 1024
+username fabioribeiro privilege 15 secret utopia*00
+username victorsousa privilege 15 secret utopia*00
+username rafaelpicollo privilege 15 secret utopia*00
+username marcospaulo privilege 15 secret utopia*00
+line console 0
+password SenhadaConsole
+login
+exit
+service password-encryption
+line vty 0 15
+password SenhadaVTY
+transport input ssh
+exec-timeout 5
+login local
+exit
+service password-encryption
+line vty 0 15
+password SenhadaVTY
+transport input ssh
+exec-timeout 5
+login local
+exit
+interface g0/2
+no shutdown
+interface g0/2.24
+encapsulation dot1q 24
+ip address 192.168.24.1 255.255.255.0
+ip helper-address 192.168.251.5
+description GATEWAY DA VLAN 24
+no sh
+interface g0/2.124
+encapsulation dot1q 124
+ip address 192.168.251.1 255.255.255.0
+ip helper-address 192.168.251.5
+description GATEWAY DA VLAN 124
+no shutdown
+do wr
